@@ -177,3 +177,6 @@ calibration_*.npy
 *.mp4
 /docs
 /tests
+
+/Video
+/yolo

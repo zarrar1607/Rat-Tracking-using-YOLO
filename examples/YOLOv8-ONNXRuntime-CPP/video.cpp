@@ -6,9 +6,9 @@
 #include "inference.h"
 
 // Function to load class names from a YAML file (assumed simple format)
-int ReadCocoYaml(YOLO_V8*& p)
+int ReadCocoYaml(YOLO_V8 *&p)
 {
-    std::ifstream file("rat.yaml");  // Ensure the YAML file is in the current directory
+    std::ifstream file("rat.yaml"); // Ensure the YAML file is in the current directory
     if (!file.is_open())
     {
         std::cerr << "❌ Failed to open YAML file" << std::endl;
@@ -48,14 +48,14 @@ int ReadCocoYaml(YOLO_V8*& p)
         value.erase(value.find_last_not_of(" \t") + 1);
         names.push_back(value);
     }
-    
+
     std::cout << "names size: " << names.size() << std::endl;
     p->classes = names;
     return 0;
 }
 
 // Function to process real-time video frames: run inference, draw only the highest-confidence detection, and display the video.
-void ProcessVideo(YOLO_V8*& p, const std::string& videoFile)
+void ProcessVideo(YOLO_V8 *&p, const std::string &videoFile)
 {
     // // Open the default camera (device 0)
     // cv::VideoCapture cap(0);
@@ -64,7 +64,22 @@ void ProcessVideo(YOLO_V8*& p, const std::string& videoFile)
     //     std::cerr << "Error opening video stream" << std::endl;
     //     return;
     // }
+
     cv::VideoCapture cap(videoFile);
+    int frame_width = static_cast<int>(cap.get(cv::CAP_PROP_FRAME_WIDTH));
+    int frame_height = static_cast<int>(cap.get(cv::CAP_PROP_FRAME_HEIGHT));
+    double fps = cap.get(cv::CAP_PROP_FPS);
+    if (fps <= 0) // Fallback to a default value if FPS is not valid
+        fps = 30.0;
+    cv::VideoWriter video("output.avi",
+                          cv::VideoWriter::fourcc('M', 'J', 'P', 'G'),
+                          fps,
+                          cv::Size(frame_width, frame_height));
+    if (!video.isOpened())
+    {
+        std::cerr << "Error: Could not open the video writer." << std::endl;
+        return;
+    }
     if (!cap.isOpened())
     {
         std::cerr << "Error opening video file: " << videoFile << std::endl;
@@ -86,9 +101,10 @@ void ProcessVideo(YOLO_V8*& p, const std::string& videoFile)
         if (!results.empty())
         {
             auto bestDetection = std::max_element(results.begin(), results.end(),
-                [](const DL_RESULT& a, const DL_RESULT& b) {
-                    return a.confidence < b.confidence;
-                });
+                                                  [](const DL_RESULT &a, const DL_RESULT &b)
+                                                  {
+                                                      return a.confidence < b.confidence;
+                                                  });
             if (bestDetection != results.end())
             {
                 const DL_RESULT &r = *bestDetection;
@@ -110,13 +126,15 @@ void ProcessVideo(YOLO_V8*& p, const std::string& videoFile)
         }
 
         // Display the processed frame
-        cv::imshow("Real-Time Object Detection", frame);
+        // cv::imshow("Real-Time Object Detection", frame);
+        video.write(frame);
+
         // Break the loop if 'q' or ESC is pressed
-        char c = (char)cv::waitKey(1);
+        char c = (char)cv::waitKey(0);
         if (c == 27 || c == 'q')
             break;
     }
-
+    video.release();
     cap.release();
     cv::destroyAllWindows();
 }
@@ -125,8 +143,8 @@ int main()
 {
     // Create an instance of the YOLO_V8 detector
     YOLO_V8 *yoloDetector = new YOLO_V8;
-    std::string model_path = "../best.onnx";  // Adjust the model path if needed
-    std::string video_path = "../BaseLineDark.mp4";
+    std::string model_path = "../best.onnx"; // Adjust the model path if needed
+    std::string video_path = "../../../Video/BaseLine - Trim.mp4";
 
     // Load the class names from the YAML file
     if (ReadCocoYaml(yoloDetector) != 0)
@@ -138,7 +156,7 @@ int main()
     // Set up model parameters
     DL_INIT_PARAM params;
     params.modelPath = model_path;
-    params.imgSize = {416, 416};  // Adjust the input size if necessary
+    params.imgSize = {416, 416}; // Adjust the input size if necessary
     // Set thresholds as needed for your application
     params.rectConfidenceThreshold = 0.01;
     params.iouThreshold = 0.01;

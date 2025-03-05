@@ -1,0 +1,4 @@
+wsl
+source yolo/bin/activate
+cd examples/YOLOv8-ONNXRuntime-CPP/
+cd examples/YOLOv8-ONNXRuntime-CPP/build/
