@@ -1,0 +1,16 @@
+# dataset.yaml
+
+# Root directory of your dataset
+# path: new_dataset
+
+# Relative paths to your images directories (from the 'path' above).
+# You can use backslashes (escaped) or forward slashes.
+train: "C:\\Machine Learning\\Rat-Tracking-using-YOLO\\new_dataset\\train\\images"
+val: "C:\\Machine Learning\\Rat-Tracking-using-YOLO\\new_dataset\\valid\\images"
+test: "C:\\Machine Learning\\Rat-Tracking-using-YOLO\\new_dataset\\test\\images"
+
+# Number of classes
+nc: 1
+
+# Class names
+names: ["rat"]

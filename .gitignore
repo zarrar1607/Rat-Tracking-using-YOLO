@@ -151,7 +151,6 @@ weights/
 *.weights
 *.pt
 *.pb
-*.onnx
 *.engine
 *.mlmodel
 *.mlpackage
@@ -181,3 +180,4 @@ calibration_*.npy
 /Video
 /yolo
 new_dataset.zip
+/new_dataset
