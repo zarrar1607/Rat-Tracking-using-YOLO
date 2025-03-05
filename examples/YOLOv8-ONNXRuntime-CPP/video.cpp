@@ -144,7 +144,7 @@ int main()
     // Create an instance of the YOLO_V8 detector
     YOLO_V8 *yoloDetector = new YOLO_V8;
     std::string model_path = "../best.onnx"; // Adjust the model path if needed
-    std::string video_path = "../../../Video/TestFile_video.mp4";
+    std::string video_path = "../../../Video/Baseline.mp4";
 
     // Load the class names from the YAML file
     if (ReadCocoYaml(yoloDetector) != 0)
