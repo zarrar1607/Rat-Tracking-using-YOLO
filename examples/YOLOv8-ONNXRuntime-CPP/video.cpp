@@ -126,11 +126,11 @@ void ProcessVideo(YOLO_V8 *&p, const std::string &videoFile)
         }
 
         // Display the processed frame
-        // cv::imshow("Real-Time Object Detection", frame);
-        video.write(frame);
+        cv::imshow("Real-Time Object Detection", frame);
+        // video.write(frame);
 
         // Break the loop if 'q' or ESC is pressed
-        char c = (char)cv::waitKey(0);
+        char c = (char)cv::waitKey(1);
         if (c == 27 || c == 'q')
             break;
     }
@@ -144,7 +144,7 @@ int main()
     // Create an instance of the YOLO_V8 detector
     YOLO_V8 *yoloDetector = new YOLO_V8;
     std::string model_path = "../best.onnx"; // Adjust the model path if needed
-    std::string video_path = "../../../Video/BaseLine - Trim.mp4";
+    std::string video_path = "../../../Video/TestFile_video.mp4";
 
     // Load the class names from the YAML file
     if (ReadCocoYaml(yoloDetector) != 0)
