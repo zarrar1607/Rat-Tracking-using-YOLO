@@ -103,6 +103,12 @@ void ProcessVideo(YOLO_V8 *&p, const std::string &videoFile)
                 const DL_RESULT &r = *bestDetection;
                 // Draw the bounding box
                 cv::rectangle(frame, r.box, cv::Scalar(0, 255, 0), 2);
+                
+                // Draw the centroid of the bounding box
+                int centerX = r.box.x + r.box.width / 2;
+                int centerY = r.box.y + r.box.height / 2;
+                cv::circle(frame, cv::Point(centerX, centerY), 5, cv::Scalar(0, 0, 255), -1);
+                
                 // Create the label text (e.g., "rat 0.85")
                 std::string label = p->classes[r.classId] + " " + std::to_string(r.confidence);
                 int baseLine = 0;
@@ -143,7 +149,11 @@ int main()
     // Create an instance of the YOLO_V8 detector
     YOLO_V8 *yoloDetector = new YOLO_V8;
     std::string model_path = "../best.onnx"; // Adjust the model path if needed
-    std::string video_path = "../../../Video/BaselineDark.mp4";
+    // std::string video_path = "../../../Video/Cohort_1.mp4";
+    // std::string video_path = "../../../Video/movie.mp4";
+    // std::string video_path = "../../../Video/BaselineDark.mp4";
+    std::string video_path = "../../../Video/Baseline.mp4";
+    // std::string video_path = "../../../Video/TestFile_video.mp4";
 
     // Load the class names from the YAML file
     if (ReadCocoYaml(yoloDetector) != 0)
@@ -157,8 +167,8 @@ int main()
     params.modelPath = model_path;
     params.imgSize = {416, 416}; // Adjust the input size if necessary
     // Set thresholds as needed for your application
-    params.rectConfidenceThreshold = 0.01;
-    params.iouThreshold = 0.01;
+    params.rectConfidenceThreshold = 0.1;
+    params.iouThreshold = 0.1;
     params.cudaEnable = false;
     params.modelType = YOLO_DETECT_V8;
 

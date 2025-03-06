@@ -156,7 +156,7 @@ def annotate_video(video_title, video_path, output_dir):
     cv2.destroyAllWindows()
 
 if __name__ == "__main__":
-    video_title = "Baseline"  # Use a title without extension if desired
+    video_title = "BaselineDark"  # Use a title without extension if desired
     video_path = ".\\Video\\" + video_title + ".mp4"  # Replace with your video path
     output_dir = "annotations"  # Directory to save annotations and images
     annotate_video(video_title, video_path, output_dir)
