@@ -87,8 +87,12 @@ void ProcessVideo(YOLO_V8 *&p, const std::string &videoFile)
             break;
 
         std::vector<DL_RESULT> results;
-        // Run inference on the current frame
+        
+        // Measure inference time using OpenCV tick functions
+        int64 start = cv::getTickCount();
         p->RunSession(frame, results);
+        int64 end = cv::getTickCount();
+        double inferenceTime = (end - start) / cv::getTickFrequency() * 1000.0; // in milliseconds
 
         // If any detections exist, select the one with the highest confidence
         if (!results.empty())
@@ -128,6 +132,10 @@ void ProcessVideo(YOLO_V8 *&p, const std::string &videoFile)
         std::string frameText = "Frame: " + std::to_string(frameNum);
         cv::putText(frame, frameText, cv::Point(10, 30), cv::FONT_HERSHEY_SIMPLEX, 1.0, cv::Scalar(255, 0, 0), 2);
 
+        // Write the inference time on the image (e.g., "Inference: 50 ms")
+        std::string timeText = "Inference: " + std::to_string(inferenceTime) + " ms";
+        cv::putText(frame, timeText, cv::Point(10, 60), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(0, 255, 255), 2);
+
         // Display the processed frame
         cv::imshow("Real-Time Object Detection", frame);
         // video.write(frame);  // Uncomment to save video
@@ -143,7 +151,6 @@ void ProcessVideo(YOLO_V8 *&p, const std::string &videoFile)
     cap.release();
     cv::destroyAllWindows();
 }
-
 int main()
 {
     // Create an instance of the YOLO_V8 detector
@@ -151,8 +158,8 @@ int main()
     std::string model_path = "../best.onnx"; // Adjust the model path if needed
     // std::string video_path = "../../../Video/Cohort_1.mp4";
     // std::string video_path = "../../../Video/movie.mp4";
-    // std::string video_path = "../../../Video/BaselineDark.mp4";
-    std::string video_path = "../../../Video/Baseline.mp4";
+    std::string video_path = "../../../Video/BaselineDark.mp4";
+    // std::string video_path = "../../../Video/Baseline.mp4";
     // std::string video_path = "../../../Video/TestFile_video.mp4";
 
     // Load the class names from the YAML file
