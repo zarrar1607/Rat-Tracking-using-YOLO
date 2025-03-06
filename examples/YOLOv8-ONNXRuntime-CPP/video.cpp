@@ -57,14 +57,6 @@ int ReadCocoYaml(YOLO_V8 *&p)
 // Function to process real-time video frames: run inference, draw only the highest-confidence detection, and display the video.
 void ProcessVideo(YOLO_V8 *&p, const std::string &videoFile)
 {
-    // // Open the default camera (device 0)
-    // cv::VideoCapture cap(0);
-    // if (!cap.isOpened())
-    // {
-    //     std::cerr << "Error opening video stream" << std::endl;
-    //     return;
-    // }
-
     cv::VideoCapture cap(videoFile);
     int frame_width = static_cast<int>(cap.get(cv::CAP_PROP_FRAME_WIDTH));
     int frame_height = static_cast<int>(cap.get(cv::CAP_PROP_FRAME_HEIGHT));
@@ -87,6 +79,7 @@ void ProcessVideo(YOLO_V8 *&p, const std::string &videoFile)
     }
 
     cv::Mat frame;
+    int frameNum = 0; // Frame counter
     while (true)
     {
         cap >> frame;
@@ -110,12 +103,12 @@ void ProcessVideo(YOLO_V8 *&p, const std::string &videoFile)
                 const DL_RESULT &r = *bestDetection;
                 // Draw the bounding box
                 cv::rectangle(frame, r.box, cv::Scalar(0, 255, 0), 2);
-                // Create the label text (e.g., "class_name 0.85")
+                // Create the label text (e.g., "rat 0.85")
                 std::string label = p->classes[r.classId] + " " + std::to_string(r.confidence);
                 int baseLine = 0;
                 cv::Size labelSize = cv::getTextSize(label, cv::FONT_HERSHEY_SIMPLEX, 0.5, 1, &baseLine);
                 int top = std::max(r.box.y, labelSize.height);
-                // Draw a filled rectangle to serve as background for the label text
+                // Draw a filled rectangle as background for the label text
                 cv::rectangle(frame, cv::Point(r.box.x, top - labelSize.height),
                               cv::Point(r.box.x + labelSize.width, top + baseLine),
                               cv::Scalar(0, 255, 0), cv::FILLED);
@@ -125,14 +118,20 @@ void ProcessVideo(YOLO_V8 *&p, const std::string &videoFile)
             }
         }
 
+        // Write the frame number on the image (e.g., "Frame: 42")
+        std::string frameText = "Frame: " + std::to_string(frameNum);
+        cv::putText(frame, frameText, cv::Point(10, 30), cv::FONT_HERSHEY_SIMPLEX, 1.0, cv::Scalar(255, 0, 0), 2);
+
         // Display the processed frame
         cv::imshow("Real-Time Object Detection", frame);
-        // video.write(frame);
+        // video.write(frame);  // Uncomment to save video
 
         // Break the loop if 'q' or ESC is pressed
         char c = (char)cv::waitKey(1);
         if (c == 27 || c == 'q')
             break;
+
+        frameNum++;
     }
     video.release();
     cap.release();
@@ -144,7 +143,7 @@ int main()
     // Create an instance of the YOLO_V8 detector
     YOLO_V8 *yoloDetector = new YOLO_V8;
     std::string model_path = "../best.onnx"; // Adjust the model path if needed
-    std::string video_path = "../../../Video/Baseline.mp4";
+    std::string video_path = "../../../Video/BaselineDark.mp4";
 
     // Load the class names from the YAML file
     if (ReadCocoYaml(yoloDetector) != 0)
@@ -166,7 +165,7 @@ int main()
     // Create the ONNX inference session
     yoloDetector->CreateSession(params);
 
-    // Process real-time video from the default camera
+    // Process video
     ProcessVideo(yoloDetector, video_path);
 
     delete yoloDetector;
