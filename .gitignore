@@ -183,3 +183,5 @@ calibration_*.npy
 /yolo
 new_dataset.zip
 /new_dataset
+/3_mice
+new_dataset_25_Mar_25.zip
