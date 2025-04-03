@@ -5,8 +5,8 @@ import shutil
 import random
 
 # Set fixed random seeds for reproducibility
-random.seed(42)
-np.random.seed(42)
+random.seed(62)
+np.random.seed(62)
 
 
 def random_augment(img, transform_counts):
@@ -32,7 +32,8 @@ def random_augment(img, transform_counts):
     # Then add "blur" with weight 0.2.
     transforms = ["none", "gray", "red", "green", "blue", "bright_up", "bright_down", "blur"]
     # weights = [0.25, 0.28, 0.05, 0.05, 0.05, 0.08, 0.08, 0.16]
-    weights = [0.44, 0.20, 0.05, 0.05, 0.05, 0.08, 0.08, 0.05]
+    # weights = [0.44, 0.20, 0.05, 0.05, 0.05, 0.08, 0.08, 0.05]
+    weights = [0.8, 0.1, 0.01, 0.01, 0.01, 0.02, 0.02, 0.02]
     # weights = [0.05, 0.2, 0.2, 0.2, 0.2, 0.05, 0.05, 0.05]
 
     transform = random.choices(transforms, weights=weights, k=1)[0]

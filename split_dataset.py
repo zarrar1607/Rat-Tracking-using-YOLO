@@ -42,9 +42,9 @@ def extract_frame_number(filename):
 def split_dataset_grouped_by_video(
     annotations_dir="annotations",
     output_dir="new_dataset",
-    train_ratio=0.75,
-    val_ratio=0.20,
-    test_ratio=0.05,
+    train_ratio=0.7,
+    val_ratio=0.3,
+    test_ratio=0.0,
     seed=42
 ):
     """
@@ -55,10 +55,11 @@ def split_dataset_grouped_by_video(
       or other similar formats.
     
     For each video group (all files sharing the same video identifier),
-    the frames are first sorted by their frame number and then split into
+    the frames are randomly shuffled and then split into
     train, valid, and test according to the specified ratios.
     
-    This helps ensure that frames from each video are divided proportionally.
+    This ensures that frames from each video are divided randomly
+    according to the desired percentages.
     """
     # Validate that ratios sum to 1.0
     total_ratio = train_ratio + val_ratio + test_ratio
@@ -97,21 +98,15 @@ def split_dataset_grouped_by_video(
 
     random.seed(seed)
     for group, file_list in video_groups.items():
-        # Sort file_list by frame number
-        file_list = sorted(file_list, key=extract_frame_number)
+        # Randomize the order of frames for a random split
+        random.shuffle(file_list)
         n = len(file_list)
         total_images += n
 
-        # Compute counts for each subset using rounding
+        # Compute counts for each subset
         n_train = round(n * train_ratio)
         n_valid = round(n * val_ratio)
-        # Ensure the total equals n by assigning the remainder to test
-        n_test = n - n_train - n_valid
-
-        # If rounding causes more images than available, adjust
-        if n_train + n_valid > n:
-            n_valid = n - n_train
-            n_test = 0
+        n_test = n - n_train - n_valid  # Assign the remainder to test
 
         train_files = file_list[:n_train]
         valid_files = file_list[n_train:n_train+n_valid]
@@ -138,8 +133,8 @@ if __name__ == "__main__":
     split_dataset_grouped_by_video(
         annotations_dir="annotations",
         output_dir="dataset",
-        train_ratio=0.75,
-        val_ratio=0.25,
-        test_ratio=0.00,
-        seed=42
+        train_ratio=0.7,
+        val_ratio=0.3,
+        test_ratio=0.0,
+        seed=62
     )
