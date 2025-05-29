@@ -156,7 +156,13 @@ def annotate_video(video_title, video_path, output_dir):
     cv2.destroyAllWindows()
 
 if __name__ == "__main__":
-    video_title = "random_youtube_video"  # Use a title without extension if desired
-    video_path = ".\\Video\\" + video_title + ".mp4"  # Replace with your video path
-    output_dir = "random_youtube_video"  # Directory to save annotations and images
+    video_title = "IMG_0336"  # Use a title without extension if desired
+    video_path = ".\\Video\\" + video_title + ".MP4
+    
+    
+    
+    
+    
+    "  # Replace with your video path
+    output_dir = "IMG_0336"  # Directory to save annotations and images
     annotate_video(video_title, video_path, output_dir)

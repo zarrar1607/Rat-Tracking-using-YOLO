@@ -51,7 +51,7 @@ def update_display(frame, label_path):
 
 def main():
     # Base folder "Cohort_1" contains two subfolders: "images" and "labels"
-    base_folder = "random_youtube_video"
+    base_folder = "desktop2"
     images_dir = os.path.join(base_folder, "images")
     labels_dir = os.path.join(base_folder, "labels")
 
