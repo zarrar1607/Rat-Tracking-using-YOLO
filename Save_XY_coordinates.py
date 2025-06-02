@@ -33,6 +33,7 @@ input_video_path = "Video/brown_rats.mp4"
 input_video_path = "Video/TestFile_video.mp4"
 input_video_path = "Video/desktop.avi"
 input_video_path = "Video/New_8229-3-4-25.mp4" # Make sure this video file exists
+input_video_path = "Video/Feedback.mp4" 
 
 if not os.path.exists(input_video_path):
     print(f"Error: Video path '{input_video_path}' does not exist. Please provide a valid path.")
@@ -46,7 +47,7 @@ if not cap.isOpened():
 
 
 # CSV setup
-csv_path = "trajectory_full.csv"
+csv_path = "feedback_trajectory_full.csv"
 with open(csv_path, "w", newline="") as csvfile:
     writer = csv.writer(csvfile)
     writer.writerow(["frame", "x_center", "y_center"]) # Write header

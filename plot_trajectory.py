@@ -15,7 +15,8 @@ import os # For basename in title
 #     print(f"Warning: Model path '{model_path}' not found. Proceeding with plotting only.")
 
 # → Open your video (to get frame dimensions, if not hardcoded)
-input_video_path = "Video/New_8229-3-4-25.mp4" # Make sure this path is correct
+# input_video_path = "Video/Feedback.mp4" # Make sure this path is correct
+input_video_path = "Video/New_8229-3-4-25_Sleep Deprivation_video.mp4"
 cap = cv2.VideoCapture(input_video_path)
 if not cap.isOpened():
     # Try to get frame dimensions from a known source if video fails
@@ -34,7 +35,8 @@ print(f"Using frame dimensions: Width={frame_w}, Height={frame_h}")
 # cx0, cy0 = frame_w/2, frame_h/2
 
 # → Load data from CSV
-csv_path = "trajectory_full copy.csv" # Make sure this CSV exists and has data
+# csv_path = "Feedback Deprivation - Full File - Rat 2- 4-25-25 Start_video.csv" # Make sure this CSV exists and has data
+csv_path = "Trajectory data New 8229 - Rat 2 - 3-4-25 START_2025-03-04_Sleep Deprivation.csv" # Make sure this CSV exists and has data
 if not os.path.exists(csv_path):
     raise FileNotFoundError(f"CSV file not found: {csv_path}. Please run the detection script first.")
 
@@ -50,8 +52,8 @@ plt.figure(figsize=(10, 8)) # You can adjust figure size
 plt.plot(df["x_center"], df["y_center"],
          "-", marker=".", markersize=4, alpha=0.7, label="Trajectory")
 # mark the origin (top-left of the frame)
-plt.scatter([0], [0],
-            color="red", marker="x", s=80, label="Origin (0,0 - Top-Left)")
+# plt.scatter([0], [0],
+#             color="red", marker="x", s=80, label="Origin (0,0 - Top-Left)")
 
 # Mark the frame boundaries if desired
 # plt.plot([0, frame_w, frame_w, 0, 0], [0, 0, frame_h, frame_h, 0], 'k--', alpha=0.5, label="Frame Boundary")
